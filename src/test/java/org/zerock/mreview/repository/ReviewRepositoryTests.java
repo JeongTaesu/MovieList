@@ -18,6 +18,8 @@ public class ReviewRepositoryTests {
     @Autowired
     private ReviewRepository reviewRepository;
 
+    @Autowired
+    private MemberRepository memberRepository;
 
 
     @Test
@@ -40,21 +42,36 @@ public class ReviewRepositoryTests {
     }
 
 
-//    @Test
-//    public void testGetMovieReviews() {
-//
-//        Movie movie = Movie.builder().mno(92L).build();
-//
-//        List<Review> result = reviewRepository.findByMovie(movie);
-//
-//        result.forEach(movieReview -> {
-//
-//            System.out.print(movieReview.getReviewnum());
-//            System.out.print("\t"+movieReview.getGrade());
-//            System.out.print("\t"+movieReview.getText());
-//            System.out.print("\t"+movieReview.getMember().getEmail());
-//            System.out.println("---------------------------");
-//        });
-//    }
+    @Test
+    public void testGetMovieReviews() {
+
+        Movie movie = Movie.builder().mno(92L).build();
+
+        List<Review> result = reviewRepository.findByMovie(movie);
+
+        result.forEach(movieReview -> {
+
+            System.out.print(movieReview.getReviewnum());
+            System.out.print("\t"+movieReview.getGrade());
+            System.out.print("\t"+movieReview.getText());
+            System.out.print("\t"+movieReview.getMember().getEmail());
+            System.out.println("---------------------------");
+        });
+    }
+
+    @Commit
+    @Transactional
+    @Test
+    public void testDeleteMembers() {
+        Long mid = 4L;
+        Member member = Member.builder()
+                .mid(mid)
+                .build();
+        // 리뷰를 먼저 지우고 나서 지워야 함
+        // FK로 참조 하고 있기에 PK 쪽을 먼저 삭제 할 수는 없음
+        reviewRepository.deletByMember(member);
+        memberRepository.deleteById(mid);
+
+    }
 
 }
